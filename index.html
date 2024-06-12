@@ -7,93 +7,43 @@
 <style>
 * {
     margin: 0;
-}
-html, body {
-    margin: 0;
     padding: 0;
-    overflow: hidden;
-    height: 100%;
-    background-color: white;
+}
+
+body {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    font-family: Tahoma, Geneva, Verdana, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    color: white;
-    background-color: darkslategrey;
-  }
-  header {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    text-align: center;
-  }
-}
-
-header {
-    background-color: #8d8b8b;
-    color: black;
-    padding: 10px;
-    text-align: center;
-}
-.emscripten { 
-    padding-right: 0; margin-left: auto; margin-right: auto; display: block; 
-}
-textarea.emscripten { 
-    font-family: monospace; width: 80%; 
-}
-div.emscripten {
-    text-align: center; 
-}
-div.emscripten_border { 
-    border: 1px solid black; 
-    background-color: black;
 }
 /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-canvas.emscripten { border: 0px none; background-color: black; }
+
+
+#cavnas {background-color:#000;}
+
+.emscripten {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+}
 
 #canvas {
-    width: 558px;
+    width: 100%;
+    height: 100%;
 }
 </style>
 </head>
 <body>
-<header class="header"><h1>emscripten</h1></header>
 <div class="emscripten" id="status">Downloading...</div>
 <div class="emscripten"><progress value="0" max="100" id="progress" hidden=1></progress> </div>
 <div class="emscripten_border"><canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas></div>
-<hr/>
-<div class="emscripten">
-<input type="checkbox" id="resize">Resize canvas
-<input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
-&nbsp;&nbsp;&nbsp;
-<input type="button" value="Fullscreen" onclick="Module.requestFullscreen(document.getElementById('pointerLock').checked, document.getElementById('resize').checked)">
-</div>
-<textarea class="emscripten" id="output" rows="8"></textarea>
 <script>
 var statusElement = document.getElementById('status'),
 progressElement = document.getElementById('progress'),
 Module = {
   preRun: [],
   postRun: [],
-  print: function () {
-    var e = document.getElementById('output');
-    return e &&
-    (e.value = ''),
-    function (e) {
-      arguments.length > 1 &&
-      (e = Array.prototype.slice.call(arguments).join(' ')),
-      console.log(e)
-    }
-  }(),
-  printErr: function (e) {
-    arguments.length > 1 &&
-    (e = Array.prototype.slice.call(arguments).join(' ')),
-    console.error(e)
-  },
   canvas: function () {
     var e = document.getElementById('canvas');
     return e.addEventListener(
